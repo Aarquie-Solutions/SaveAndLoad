@@ -1,0 +1,10 @@
+{
+  "name": "com.aarquiesolutions.saveandload",
+  "displayName": "Save And Load",
+  "version": "1.0.0",
+  "description": "Framework to allow for easy saving and loading of gameobjects",
+  "type": "library",
+  "dependencies": {
+    "com.aarquiesolutions.typeextensions": "1.0.0"
+  }
+}

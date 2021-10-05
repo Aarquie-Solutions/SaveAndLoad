@@ -1,0 +1,16 @@
+{
+    "name": "aarquiesolutions.saveandload",
+    "rootNamespace": "",
+    "references": [
+        "GUID:dd9d3d963edc95a4eb5080ffb30b8e0b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
