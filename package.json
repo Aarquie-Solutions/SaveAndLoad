@@ -5,6 +5,6 @@
   "description": "Framework to allow for easy saving and loading of gameobjects",
   "type": "library",
   "dependencies": {
-    "com.aarquiesolutions.typeextensions": "https://github.com/Aarquie-Solutions/TypeExtensions.git"
+    "com.aarquiesolutions.typeextensions": "https://github.com/Aarquie-Solutions/TypeExtensions.git#v1.0.0"
   }
 }
