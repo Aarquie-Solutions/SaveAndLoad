@@ -1,8 +1,8 @@
 {
-    "name": "aarquiesolutions.saveandload.editor",
+    "name": "aarquiesolutions.saveandloadsystem.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:a56a8fbff82758c46aec614ed38c1739"
+        
     ],
     "includePlatforms": [
         "Editor"

@@ -1,79 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System;
 using UnityEngine;
 using System.Reflection;
 
-public class SaveLoadComponent : MonoBehaviour
+namespace AarquieSolutions.SaveAndLoadSystem
 {
-    private void Awake()
+    public class SaveLoadComponent : MonoBehaviour
     {
-        LoadValues();
-    }
-
-    private void LoadValues()
-    {
-        MonoBehaviour[] allAttachedMonobehaviours = GetComponents<MonoBehaviour>();
-
-        foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
+        private void Awake()
         {
-            if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
-            {
-                FieldInfo[] objectFields = monoBehaviour.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            LoadValues();
+        }
 
-                foreach (FieldInfo fieldInfo in objectFields)
+        private void LoadValues()
+        {
+            MonoBehaviour[] allAttachedMonobehaviours = GetComponents<MonoBehaviour>();
+
+            foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
+            {
+                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
                 {
-                    if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
+                    FieldInfo[] objectFields = monoBehaviour.GetType()
+                        .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                    foreach (FieldInfo fieldInfo in objectFields)
                     {
-                        Type type = fieldInfo.FieldType;
-                        switch (saveData.keyDoesNotExistReturnType)
+                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
                         {
-                            case KeyDoesNotExistReturnType.DoNotReturn:
-                                if (SaveLoadSystem.HasKey(saveData.key))
-                                {
-                                    fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key));
-                                }
-                                break;
-                            case KeyDoesNotExistReturnType.DefaultValue:
-                                fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key, type.GetDefaultValue()));
-                                break;
-                            case KeyDoesNotExistReturnType.ConstructorValue:
-                                fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key, Activator.CreateInstance(type)));
-                                break;
-                            default:
-                                break;
+                            Type type = fieldInfo.FieldType;
+                            switch (saveData.keyDoesNotExistReturnType)
+                            {
+                                case KeyDoesNotExistReturnType.DoNotReturn:
+                                    if (SaveLoadSystem.HasKey(saveData.key))
+                                    {
+                                        fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key));
+                                    }
+
+                                    break;
+                                case KeyDoesNotExistReturnType.DefaultValue:
+                                    fieldInfo.SetValue(monoBehaviour,
+                                        SaveLoadSystem.LoadObject(saveData.key, type.GetDefaultValue()));
+                                    break;
+                                case KeyDoesNotExistReturnType.ConstructorValue:
+                                    fieldInfo.SetValue(monoBehaviour,
+                                        SaveLoadSystem.LoadObject(saveData.key, Activator.CreateInstance(type)));
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    
-    private void SaveValues()
-    {
-        MonoBehaviour[] allAttachedMonobehaviours = GetComponents<MonoBehaviour>();
 
-        foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
+        private void SaveValues()
         {
-            if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
-            {
-                FieldInfo[] objectFields = monoBehaviour.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MonoBehaviour[] allAttachedMonobehaviours = GetComponents<MonoBehaviour>();
 
-                foreach (FieldInfo fieldInfo in objectFields)
+            foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
+            {
+                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
                 {
-                    if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
+                    FieldInfo[] objectFields = monoBehaviour.GetType()
+                        .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                    foreach (FieldInfo fieldInfo in objectFields)
                     {
-                        SaveLoadSystem.SaveObject(saveData.key, fieldInfo.GetValue(monoBehaviour));
+                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
+                        {
+                            SaveLoadSystem.SaveObject(saveData.key, fieldInfo.GetValue(monoBehaviour));
+                        }
                     }
                 }
             }
         }
-    }
 
-    private void OnDestroy()
-    {
-        SaveValues();
-    }
+        private void OnDestroy()
+        {
+            SaveValues();
+        }
 
+    }
 }

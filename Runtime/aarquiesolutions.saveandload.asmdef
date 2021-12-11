@@ -1,8 +1,8 @@
 {
-    "name": "aarquiesolutions.saveandload",
-    "rootNamespace": "",
+    "name": "aarquiesolutions.saveandloadsystem",
+    "rootNamespace": "AarquieSolutions.SaveAndLoadSystem",
     "references": [
-        "GUID:dd9d3d963edc95a4eb5080ffb30b8e0b"
+        
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

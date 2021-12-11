@@ -1,30 +1,34 @@
 using UnityEditor;
 using UnityEngine;
 
-[InitializeOnLoad]
-public class AttachSaveLoadComponent
+namespace AarquieSolutions.SaveAndLoadSystem
 {
-    static AttachSaveLoadComponent()
+    [InitializeOnLoad]
+    public class AttachSaveLoadComponent
     {
-        EditorApplication.hierarchyWindowItemOnGUI += OnGUIHierarchyItem;
-    }
-
-    static void OnGUIHierarchyItem(int instanceID, Rect selectionRect)
-    {
-        GameObject gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
-
-        if (gameObject != null)
+        static AttachSaveLoadComponent()
         {
-            MonoBehaviour[] monoBehaviours = gameObject.GetComponents<MonoBehaviour>();
+            EditorApplication.hierarchyWindowItemOnGUI += OnGUIHierarchyItem;
+        }
 
-            foreach (MonoBehaviour monoBehaviour in monoBehaviours)
+        static void OnGUIHierarchyItem(int instanceID, Rect selectionRect)
+        {
+            GameObject gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+
+            if (gameObject != null)
             {
-                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
+                MonoBehaviour[] monoBehaviours = gameObject.GetComponents<MonoBehaviour>();
+
+                foreach (MonoBehaviour monoBehaviour in monoBehaviours)
                 {
-                    if (!monoBehaviour.GetComponent<SaveLoadComponent>())
+                    if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
                     {
-                        gameObject.AddComponent<SaveLoadComponent>();
-                        Debug.Log($"SaveLoadComponent script was attached to Gameobject {gameObject.name} since it has a script attached that uses the attribute ContainsDataToBeSaved");                        
+                        if (!monoBehaviour.GetComponent<SaveLoadComponent>())
+                        {
+                            gameObject.AddComponent<SaveLoadComponent>();
+                            Debug.Log(
+                                $"SaveLoadComponent script was attached to Gameobject {gameObject.name} since it has a script attached that uses the attribute ContainsDataToBeSaved");
+                        }
                     }
                 }
             }

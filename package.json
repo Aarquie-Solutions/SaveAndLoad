@@ -1,8 +1,8 @@
 {
-  "name": "com.aarquiesolutions.saveandload",
-  "displayName": "Save And Load",
-  "version": "1.0.0",
-  "description": "Framework to allow for easy saving and loading of gameobjects",
+  "name": "com.aarquiesolutions.saveandloadsystem",
+  "displayName": "Save And Load System",
+  "version": "1.0.1",
+  "description": "Extension to allow for easy saving and loading of data",
   "type": "library",
   "gitDependencies": {
     "com.aarquiesolutions.typeextensions": "https://github.com/Aarquie-Solutions/TypeExtensions.git"
