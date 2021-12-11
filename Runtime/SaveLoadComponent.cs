@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Reflection;
+using AarquieSolutions.TypeExtensions;
 
 namespace AarquieSolutions.SaveAndLoadSystem
 {

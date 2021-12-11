@@ -2,7 +2,7 @@
     "name": "aarquiesolutions.saveandloadsystem",
     "rootNamespace": "AarquieSolutions.SaveAndLoadSystem",
     "references": [
-        
+        "aarquiesolutions.typeextensions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

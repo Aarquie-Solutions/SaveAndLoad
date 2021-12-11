@@ -2,7 +2,7 @@
     "name": "aarquiesolutions.saveandloadsystem.editor",
     "rootNamespace": "",
     "references": [
-        
+        "aarquiesolutions.saveandloadsystem"
     ],
     "includePlatforms": [
         "Editor"
