@@ -21,6 +21,11 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
                 foreach (MonoBehaviour monoBehaviour in monoBehaviours)
                 {
+                    if (monoBehaviour == null)
+                    {
+                        continue;
+                    }
+                    
                     if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
                     {
                         if (!monoBehaviour.GetComponent<SaveLoadComponent>())

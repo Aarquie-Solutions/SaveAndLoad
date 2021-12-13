@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Reflection;
-using AarquieSolutions.TypeExtensions;
+using AarquieSolutions.Extensions.Type;
 
 namespace AarquieSolutions.SaveAndLoadSystem
 {
