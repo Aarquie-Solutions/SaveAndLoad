@@ -18,14 +18,14 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
-                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
+                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSavedAttribute), false))
                 {
                     FieldInfo[] objectFields = monoBehaviour.GetType()
                         .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                     foreach (FieldInfo fieldInfo in objectFields)
                     {
-                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
+                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
                         {
                             Type type = fieldInfo.FieldType;
                             switch (saveData.keyDoesNotExistReturnType)
@@ -60,14 +60,14 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
-                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
+                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSavedAttribute), false))
                 {
                     FieldInfo[] objectFields = monoBehaviour.GetType()
                         .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                     foreach (FieldInfo fieldInfo in objectFields)
                     {
-                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveData)) is SaveData saveData)
+                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
                         {
                             SaveLoadSystem.SaveObject(saveData.key, fieldInfo.GetValue(monoBehaviour));
                         }

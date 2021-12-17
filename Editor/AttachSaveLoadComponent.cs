@@ -26,7 +26,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
                         continue;
                     }
                     
-                    if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSaved), false))
+                    if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSavedAttribute), false))
                     {
                         if (!monoBehaviour.GetComponent<SaveLoadComponent>())
                         {

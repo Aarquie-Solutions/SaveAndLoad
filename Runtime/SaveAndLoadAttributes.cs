@@ -11,21 +11,21 @@ namespace AarquieSolutions.SaveAndLoadSystem
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class SaveData : PropertyAttribute
+    public class SaveDataAttribute : PropertyAttribute
     {
         public string key;
         public KeyDoesNotExistReturnType keyDoesNotExistReturnType;
         public string fileName;
         public string path;
 
-        public SaveData(string key,
+        public SaveDataAttribute(string key,
             KeyDoesNotExistReturnType keyDoesNotExistReturnType = KeyDoesNotExistReturnType.DoNotReturn)
         {
             this.key = key;
             this.keyDoesNotExistReturnType = keyDoesNotExistReturnType;
         }
 
-        public SaveData(string key, KeyDoesNotExistReturnType keyDoesNotExistReturnType, string fileName = null,
+        public SaveDataAttribute(string key, KeyDoesNotExistReturnType keyDoesNotExistReturnType, string fileName = null,
             string path = null) : this(key, keyDoesNotExistReturnType)
         {
             this.fileName = fileName;
@@ -35,7 +35,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ContainsDataToBeSaved : Attribute
+    public class ContainsDataToBeSavedAttribute : Attribute
     {
     }
 }
