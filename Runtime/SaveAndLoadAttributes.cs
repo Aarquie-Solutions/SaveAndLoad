@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace AarquieSolutions.SaveAndLoadSystem
 {
@@ -11,13 +10,12 @@ namespace AarquieSolutions.SaveAndLoadSystem
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class SaveDataAttribute : PropertyAttribute
+    public class SaveDataAttribute : Attribute
     {
         public string key;
         public KeyDoesNotExistReturnType keyDoesNotExistReturnType;
         public string fileName;
         public string path;
-
         public SaveDataAttribute(string key,
             KeyDoesNotExistReturnType keyDoesNotExistReturnType = KeyDoesNotExistReturnType.DoNotReturn)
         {
@@ -25,18 +23,13 @@ namespace AarquieSolutions.SaveAndLoadSystem
             this.keyDoesNotExistReturnType = keyDoesNotExistReturnType;
         }
 
-        public SaveDataAttribute(string key, KeyDoesNotExistReturnType keyDoesNotExistReturnType, string fileName = null,
+        public SaveDataAttribute(string key, KeyDoesNotExistReturnType keyDoesNotExistReturnType,
+            string fileName = null,
             string path = null) : this(key, keyDoesNotExistReturnType)
         {
             this.fileName = fileName;
             this.path = path;
-
         }
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ContainsDataToBeSavedAttribute : Attribute
-    {
     }
 }
 

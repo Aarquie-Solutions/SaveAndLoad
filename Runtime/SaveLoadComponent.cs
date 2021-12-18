@@ -18,36 +18,33 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
-                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSavedAttribute), false))
+                FieldInfo[] objectFields = monoBehaviour.GetType()
+                    .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                foreach (FieldInfo fieldInfo in objectFields)
                 {
-                    FieldInfo[] objectFields = monoBehaviour.GetType()
-                        .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-                    foreach (FieldInfo fieldInfo in objectFields)
+                    if (Attribute.GetCustomAttribute(fieldInfo,
+                        typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
                     {
-                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
+                        Type type = fieldInfo.FieldType;
+                        switch (saveData.keyDoesNotExistReturnType)
                         {
-                            Type type = fieldInfo.FieldType;
-                            switch (saveData.keyDoesNotExistReturnType)
-                            {
-                                case KeyDoesNotExistReturnType.DoNotReturn:
-                                    if (SaveLoadSystem.HasKey(saveData.key))
-                                    {
-                                        fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key));
-                                    }
-
-                                    break;
-                                case KeyDoesNotExistReturnType.DefaultValue:
-                                    fieldInfo.SetValue(monoBehaviour,
-                                        SaveLoadSystem.LoadObject(saveData.key, type.GetDefaultValue()));
-                                    break;
-                                case KeyDoesNotExistReturnType.ConstructorValue:
-                                    fieldInfo.SetValue(monoBehaviour,
-                                        SaveLoadSystem.LoadObject(saveData.key, Activator.CreateInstance(type)));
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case KeyDoesNotExistReturnType.DoNotReturn:
+                                if (SaveLoadSystem.HasKey(saveData.key))
+                                {
+                                    fieldInfo.SetValue(monoBehaviour, SaveLoadSystem.LoadObject(saveData.key));
+                                }
+                                break;
+                            case KeyDoesNotExistReturnType.DefaultValue:
+                                fieldInfo.SetValue(monoBehaviour,
+                                    SaveLoadSystem.LoadObject(saveData.key, type.GetDefaultValue()));
+                                break;
+                            case KeyDoesNotExistReturnType.ConstructorValue:
+                                fieldInfo.SetValue(monoBehaviour,
+                                    SaveLoadSystem.LoadObject(saveData.key, Activator.CreateInstance(type)));
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -60,17 +57,15 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
-                if (monoBehaviour.GetType().IsDefined(typeof(ContainsDataToBeSavedAttribute), false))
-                {
-                    FieldInfo[] objectFields = monoBehaviour.GetType()
-                        .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                FieldInfo[] objectFields = monoBehaviour.GetType()
+                    .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-                    foreach (FieldInfo fieldInfo in objectFields)
+                foreach (FieldInfo fieldInfo in objectFields)
+                {
+                    if (Attribute.GetCustomAttribute(fieldInfo,
+                        typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
                     {
-                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
-                        {
-                            SaveLoadSystem.SaveObject(saveData.key, fieldInfo.GetValue(monoBehaviour));
-                        }
+                        SaveLoadSystem.SaveObject(saveData.key, fieldInfo.GetValue(monoBehaviour));
                     }
                 }
             }

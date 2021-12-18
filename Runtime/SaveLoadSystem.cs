@@ -108,27 +108,29 @@ namespace AarquieSolutions.SaveAndLoadSystem
             }
         }
 
-        public static bool ReadBinaryFileToDictionary(Dictionary<string, string> dictionary, string fileName)
+        public static void ReadBinaryFileToDictionary(Dictionary<string, string> dictionary, string fileName)
         {
             if (!File.Exists(fileName))
             {
-                return false;
+                return;
             }
 
-            using (FileStream fileStream = File.OpenRead(fileName))
-            using (BinaryReader reader = new BinaryReader(fileStream))
+            using FileStream fileStream = File.OpenRead(fileName);
+            using BinaryReader reader = new BinaryReader(fileStream);
+
+            if (fileStream.Length == 0)
             {
-                int count = reader.ReadInt32();
-
-                for (int i = 0; i < count; i++)
-                {
-                    string key = reader.ReadString();
-                    string value = reader.ReadString();
-                    dictionary[key] = value;
-                }
+                return;
             }
 
-            return true;
+            int count = reader.ReadInt32(); 
+
+            for (int i = 0; i < count; i++)
+            {
+                string key = reader.ReadString();
+                string value = reader.ReadString();
+                dictionary[key] = value;
+            }
         }
     }
 }
