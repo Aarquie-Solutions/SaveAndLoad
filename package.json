@@ -1,9 +1,12 @@
 {
   "name": "com.aarquiesolutions.saveandloadsystem",
   "displayName": "Save And Load System",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Extension to allow for easy saving and loading of data",
   "type": "library",
+  "dependencies": {
+    "com.aarquiesolutions.typeextensions": "1.0.0"
+  },
   "gitDependencies": {
     "com.aarquiesolutions.typeextensions": "https://github.com/Aarquie-Solutions/TypeExtensions.git"
   }
