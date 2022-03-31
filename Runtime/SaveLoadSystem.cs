@@ -8,7 +8,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
     public static class SaveLoadSystem
     {
         private static Dictionary<string, string> savedData = new Dictionary<string, string>();
-        public const string SavedDataFileName = "SaveData";
+        private const string SavedDataFileName = "SaveData";
 
         public static bool HasKey(string key)
         {
@@ -35,10 +35,11 @@ namespace AarquieSolutions.SaveAndLoadSystem
             ReadBinaryFileToDictionary(savedData, path);
         }
 
-        public static bool SaveObject(string key, object objectToBeSaved, string fileName = null, string path = null)
+        public static bool Save(string key, object objectToBeSaved, string fileName = null, string path = null)
         {
-            if (!typeof(object).IsSerializable)
+            if (!objectToBeSaved.GetType().IsSerializable)
             {
+                Debug.LogError($"Some objects could not be saved because the objects were not serializable. Key:{key}");
                 return false;
             }
 
@@ -48,12 +49,11 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             if (fileName != null)
             {
+                finalPath = fileName;
                 if (!string.IsNullOrEmpty(path))
                 {
                     finalPath = $"{path}/{fileName}";
                 }
-
-                finalPath = fileName;
             }
 
             string savePath = $"{Application.persistentDataPath}/{finalPath}.bsf";
@@ -71,7 +71,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
             return true;
         }
 
-        public static object LoadObject(string key, object defaultValue = null)
+        public static object Load(string key, object defaultValue = null)
         {
             if (!savedData.ContainsKey(key))
             {
@@ -95,7 +95,31 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
         }
 
-        public static void WriteDictionaryToBinaryFile(Dictionary<string, string> dictionary, string fileName)
+        public static bool Delete(string key)
+        {
+            if (!savedData.ContainsKey(key))
+            {
+                return true;
+            }
+            
+            string path = $"{Application.persistentDataPath}/{savedData[key]}.bsf";
+            
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                savedData.Remove(key);
+                SaveKeys();
+                return true;
+            }
+            else
+            {
+                Debug.LogError($"File doesn't exist. No data to delete for {key}. This shouldn't have happened.");
+                return false;
+            }
+
+        }
+
+        private static void WriteDictionaryToBinaryFile(Dictionary<string, string> dictionary, string fileName)
         {
             using FileStream fileStream = File.OpenWrite(fileName);
             using BinaryWriter writer = new BinaryWriter(fileStream);
@@ -108,7 +132,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
             }
         }
 
-        public static void ReadBinaryFileToDictionary(Dictionary<string, string> dictionary, string fileName)
+        private static void ReadBinaryFileToDictionary(Dictionary<string, string> dictionary, string fileName)
         {
             if (!File.Exists(fileName))
             {
