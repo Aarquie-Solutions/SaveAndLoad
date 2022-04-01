@@ -18,13 +18,18 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
+                if (monoBehaviour == null)
+                {
+                    continue;
+                }
+                
                 FieldInfo[] objectFields = monoBehaviour.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                 foreach (FieldInfo fieldInfo in objectFields)
                 {
                     if (Attribute.GetCustomAttribute(fieldInfo,
-                        typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
+                            typeof(SaveDataAttribute)) is SaveDataAttribute saveData)
                     {
                         LoadDataIntoField(fieldInfo, saveData, monoBehaviour);
                     }
@@ -62,6 +67,11 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             foreach (MonoBehaviour monoBehaviour in allAttachedMonobehaviours)
             {
+                if (monoBehaviour == null)
+                {
+                    continue;
+                }
+                
                 FieldInfo[] objectFields = monoBehaviour.GetType()
                     .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
