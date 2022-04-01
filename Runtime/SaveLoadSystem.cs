@@ -7,6 +7,8 @@ namespace AarquieSolutions.SaveAndLoadSystem
 {
     public static class SaveLoadSystem
     {
+        
+        
         private const string SavedDataFileName = "SaveData";
         private static readonly string pathToAllKeysFile = $"{Application.persistentDataPath}/{SavedDataFileName}.bsf";
         private static Dictionary<string, string> savedData = new Dictionary<string, string>();
@@ -47,8 +49,10 @@ namespace AarquieSolutions.SaveAndLoadSystem
             SaveKeys();
         }
 
-        public static bool Save(string key, object objectToBeSaved, string fileName = null, string path = null)
+        public static bool Save(string key, object objectToBeSaved, string fileName = null, string path = null, bool isInEditorMode = false)
         {
+            LoadKeysIfEditorMode(isInEditorMode);
+
             if (!objectToBeSaved.GetType().IsSerializable)
             {
                 Debug.LogError($"Some objects could not be saved because the objects were not serializable. Key:{key}");
@@ -83,9 +87,11 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
             return true;
         }
-
-        public static object Load(string key, object defaultValue = null)
+        
+        public static object Load(string key, object defaultValue = null, bool isInEditorMode = false)
         {
+            LoadKeysIfEditorMode(isInEditorMode);
+
             if (!savedData.ContainsKey(key))
             {
                 return defaultValue;
@@ -108,11 +114,13 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
         }
 
-        public static bool Delete(string key)
+        public static bool Delete(string key, bool isInEditorMode = false)
         {
+            LoadKeysIfEditorMode(isInEditorMode);
+            
             if (!savedData.ContainsKey(key))
             {
-                return true;
+                return false;
             }
             
             string path = $"{Application.persistentDataPath}/{savedData[key]}.bsf";
@@ -129,7 +137,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
                 return false;
             }
         }
-        
+
         private static void WriteDictionaryToBinaryFile(Dictionary<string, string> dictionary, string fileName)
         {
             using FileStream fileStream = File.OpenWrite(fileName);
@@ -167,5 +175,14 @@ namespace AarquieSolutions.SaveAndLoadSystem
                 dictionary[key] = value;
             }
         }
+
+        private static void LoadKeysIfEditorMode(bool isInEditorMode)
+        {
+            if (isInEditorMode)
+            {
+                LoadKeys();
+            }
+        }
+        
     }
 }
