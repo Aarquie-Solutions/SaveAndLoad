@@ -12,8 +12,8 @@ public class SaveAndLoadTest
     [Test]
     public void SavingAndLoadingStringData()
     {
-        SaveLoadSystem.Save("Test", "Test string");
-        Assert.AreEqual("Test string", SaveLoadSystem.Load("Test")); 
+        SaveLoadSystem.Save("Test", "Test string", isInEditorMode: true);
+        Assert.AreEqual("Test string", SaveLoadSystem.Load("Test", isInEditorMode: true)); 
     }
     
     [Test]
@@ -21,8 +21,8 @@ public class SaveAndLoadTest
     {
         DateTime dateTime = new DateTime(2020,8, 25, 0, 1, 1);
         
-        SaveLoadSystem.Save("TestDateTime", dateTime);
-        DateTime loadedDateTime = (DateTime)SaveLoadSystem.Load("TestDateTime");
+        SaveLoadSystem.Save("TestDateTime", dateTime, isInEditorMode: true);
+        DateTime loadedDateTime = (DateTime)SaveLoadSystem.Load("TestDateTime", isInEditorMode: true);
         
         Assert.AreEqual(dateTime, loadedDateTime); 
     }
@@ -30,24 +30,24 @@ public class SaveAndLoadTest
     [Test]
     public void SavingAndLoadingStringDataUsingCustomPath()
     {
-        SaveLoadSystem.Save("CustomPath", "Test custom path","TestFileName","TestPathName");
-        Assert.AreEqual("Test custom path", SaveLoadSystem.Load("CustomPath")); 
+        SaveLoadSystem.Save("CustomPath", "Test custom path","TestFileName","TestPathName", isInEditorMode: true);
+        Assert.AreEqual("Test custom path", SaveLoadSystem.Load("CustomPath", isInEditorMode: true)); 
     }
     
     [Test]
     public void LoadingNotExistentData()
     {
-        Assert.AreEqual("", SaveLoadSystem.Load("AKeyThatDoesn'tExists", "")); 
+        Assert.AreEqual("", SaveLoadSystem.Load("AKeyThatDoesn'tExists", "", isInEditorMode: true)); 
     }
 
     [Test]
     public void DeleteKey()
     {
         string key = "DeleteKey";
-        SaveLoadSystem.Save(key, "Delete Test string");
-        Assert.AreEqual("Delete Test string", SaveLoadSystem.Load(key)); 
+        SaveLoadSystem.Save(key, "Delete Test string", isInEditorMode: true);
+        Assert.AreEqual("Delete Test string", SaveLoadSystem.Load(key, isInEditorMode: true)); 
         
-        SaveLoadSystem.Delete(key);
-        Assert.AreEqual("Load Default Value",SaveLoadSystem.Load(key, "Load Default Value"));
+        SaveLoadSystem.Delete(key,isInEditorMode: true);
+        Assert.AreEqual("Load Default Value",SaveLoadSystem.Load(key, "Load Default Value", isInEditorMode: true));
     }
 }
