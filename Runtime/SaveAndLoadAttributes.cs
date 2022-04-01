@@ -17,11 +17,6 @@ namespace AarquieSolutions.SaveAndLoadSystem
         public string fileName;
         public string path;
 
-        public SaveDataAttribute()
-        {
-            
-        }
-        
         public SaveDataAttribute(string key,
             KeyDoesNotExistReturnType keyDoesNotExistReturnType = KeyDoesNotExistReturnType.DoNotReturn)
         {
