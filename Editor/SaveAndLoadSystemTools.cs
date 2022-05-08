@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,12 +11,8 @@ namespace AarquieSolutions.SaveAndLoadSystem.Editor
     public class SaveAndLoadSystemTools : EditorWindow
     {
         private static HashSet<string> keys = new HashSet<string>();
-        private static HashSet<MonoBehaviour> checkedMonoBehaviours = new HashSet<MonoBehaviour>();
         private static string consoleText;
         private const int ButtonWidth = 50;
-        private const string matchingPattern = "[SaveData";
-        private const string attributeName = "SaveData";
-        private static readonly int skipCharacters = "SaveData(\"".Length;
         
         [MenuItem("Tools/Save and Load System/Show Keys")]
         public static void ShowWindow()
@@ -36,9 +35,14 @@ namespace AarquieSolutions.SaveAndLoadSystem.Editor
                 }
             }
         }
-
+        
         private void OnGUI()
         {
+            if (keys.Count == 0)
+            {
+                GUILayout.Label("Loading...", EditorStyles.boldLabel);
+            }
+            
             GUILayout.Label("Delete Keys", EditorStyles.boldLabel);
             foreach (string key in keys)
             {
@@ -71,43 +75,56 @@ namespace AarquieSolutions.SaveAndLoadSystem.Editor
             GUILayout.FlexibleSpace();
             GUILayout.Label(consoleText);
         }
-        
-        private static void FindAllFieldsWithSaveDataAttribute()
+
+        private static async void FindAllFieldsWithSaveDataAttribute()
         {
-            string[] guids = AssetDatabase.FindAssets("t:Monoscript");
-    
-            foreach (string guid in guids)
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            Task[] tasks = new Task[assemblies.Length];
+            for (int i = 0; i < assemblies.Length; i++)
             {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                MonoScript monoScript = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-
-                if (!monoScript.text.Contains(matchingPattern))
-                {
-                    continue;
-                }
-                if (monoScript.name.Contains(nameof(SaveAndLoadSystemTools)))
-                {
-                    continue;
-                }
-
-                IEnumerable<int> indices = GetAllIndexes(monoScript.text, attributeName);
-                foreach (int index in indices)
-                {
-                    int startIndex = index + skipCharacters;
-                    int endIndex =  monoScript.text.IndexOf('"', startIndex);
-                    keys.Add(monoScript.text.Substring(startIndex, endIndex-startIndex));  
-                }
-
+                Assembly assembly = assemblies[i];
+                tasks[i] = FindAllAttributedMembersInAssembly(assembly);
             }
+
+            await Task.WhenAll(tasks);
         }
 
-        private static IEnumerable<int> GetAllIndexes(string source, string matchString)
+        private static async Task FindAllAttributedMembersInAssembly(Assembly assembly)
         {
-            matchString = Regex.Escape(matchString);
-            foreach (Match match in Regex.Matches(source, matchString))
+            Type[] types = assembly.GetTypes();
+            Task[] tasks = new Task[types.Length];
+            for (int i = 0; i < types.Length; i++)
             {
-                yield return match.Index;
+                Type type = types[i];
+                tasks[i] = FindAllAttributedMembersInType(type);
             }
+
+            await Task.WhenAll(tasks);
+        }
+
+        private static async Task FindAllAttributedMembersInType(Type type)
+        {
+            if (type.IsInterface || type.IsEnum)
+            {
+                await Task.CompletedTask;
+            }
+
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            MemberInfo[] memberInfos = type.GetMembers(flags);
+
+            foreach (MemberInfo memberInfo in memberInfos)
+            {
+                if (memberInfo.CustomAttributes.ToArray().Length > 0)
+                {
+                    SaveDataAttribute saveDataAttribute = memberInfo.GetCustomAttribute<SaveDataAttribute>();
+                    if (saveDataAttribute != null)
+                    {
+                        keys.Add(saveDataAttribute.key);
+                    }
+                }
+            }
+            await Task.CompletedTask;
         }
     }
 }
