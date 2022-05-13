@@ -51,7 +51,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
         public static bool Save(string key, object objectToBeSaved, string fileName = null, string path = null, bool isInEditorMode = false)
         {
-            LoadKeysIfEditorMode(isInEditorMode);
+            LoadKeysIfInEditorMode(isInEditorMode);
 
             if (!objectToBeSaved.GetType().IsSerializable)
             {
@@ -90,7 +90,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
         
         public static object Load(string key, object defaultValue = null, bool isInEditorMode = false)
         {
-            LoadKeysIfEditorMode(isInEditorMode);
+            LoadKeysIfInEditorMode(isInEditorMode);
 
             if (!savedData.ContainsKey(key))
             {
@@ -116,7 +116,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
 
         public static bool Delete(string key, bool isInEditorMode = false)
         {
-            LoadKeysIfEditorMode(isInEditorMode);
+            LoadKeysIfInEditorMode(isInEditorMode);
             
             if (!savedData.ContainsKey(key))
             {
@@ -176,7 +176,7 @@ namespace AarquieSolutions.SaveAndLoadSystem
             }
         }
 
-        private static void LoadKeysIfEditorMode(bool isInEditorMode)
+        private static void LoadKeysIfInEditorMode(bool isInEditorMode)
         {
             if (isInEditorMode)
             {

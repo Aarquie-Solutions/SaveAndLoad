@@ -5,7 +5,8 @@
   "description": "Extension to allow for easy saving and loading of data",
   "type": "library",
   "dependencies": {
-    "com.aarquiesolutions.typeextensions": "1.0.0"
+    "com.aarquiesolutions.typeextensions": "1.0.0",
+    "com.unity.editorcoroutines": "1.0.0"
   },
   "gitDependencies": {
     "com.aarquiesolutions.typeextensions": "https://github.com/Aarquie-Solutions/TypeExtensions.git"
