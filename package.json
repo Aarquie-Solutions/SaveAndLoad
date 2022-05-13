@@ -1,7 +1,7 @@
 {
   "name": "com.aarquiesolutions.saveandloadsystem",
   "displayName": "Save And Load System",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Extension to allow for easy saving and loading of data",
   "type": "library",
   "dependencies": {
